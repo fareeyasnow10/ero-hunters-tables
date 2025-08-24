@@ -113,7 +113,7 @@ with tab1:
 
     # Auto-run filter
     result = filter_df(roles_selected, races_items, special_str)
-    st.write(f"### Results")
+    # st.write(f"### Results")
     st.dataframe(result, use_container_width=True, height=min(38+len(result) * 35, 20000))
 
 with tab2:
