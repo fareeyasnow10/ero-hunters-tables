@@ -102,7 +102,7 @@ with tab1:
     # Races & Special row
     col1, col2 = st.columns([1,1])
     with col1:
-        show_races = st.toggle("Show Races", 
+        show_races = st.toggle("Show Racials", 
                                    value=st.session_state.show_races_state,
                                    key="show_races")
         # Update session state when toggle changes
