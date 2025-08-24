@@ -49,23 +49,29 @@ def render_selection_buttons(df, id_col, name_col, session_key, label, buttons_p
 def filter_df(role_items, race_items, special_items):
     df = joined['FMoves']
 
-    # ---- Roles OR Races ----
+    # ---- Roles ----
     role_search = [i.strip() for i in role_items if i.strip()]
-    race_search = [i.strip() for i in race_items if i.strip()]
-
     role_masks = []
     for item in role_search:
         mask = df['roles'].fillna('').str.split(',').apply(lambda x: item in [s.strip() for s in x])
         role_masks.append(mask)
 
+    # ---- Races ----
+    race_search = [i.strip() for i in race_items if i.strip()]
     race_masks = []
+
+    if "All" in race_search:
+        race_masks.append(df['races'].fillna('') != '')  # keep all non-empty races
+        race_search = [i for i in race_search if i != "All"]
+
     for item in race_search:
         mask = df['races'].fillna('').str.split(',').apply(lambda x: item in [s.strip() for s in x])
         race_masks.append(mask)
 
-    # Combine all role and race masks with OR
-    if role_masks or race_masks:
-        combined_mask = pd.concat(role_masks + race_masks, axis=1).any(axis=1)
+    # ---- Combine Roles OR Races ----
+    all_masks = role_masks + race_masks
+    if all_masks:
+        combined_mask = pd.concat(all_masks, axis=1).any(axis=1)
         filtered_df = df[combined_mask]
     else:
         filtered_df = df.copy()
